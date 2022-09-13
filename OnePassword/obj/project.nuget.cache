@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "2f9UgFcbGyIX5ZpcweZa04/uaOg1U/u/0KbBerXRIXp7cYfVXFbKC1CnOprIaeY+Vr+Xvdi1wyuOAhhUGwR1Qw==",
+  "success": true,
+  "projectFilePath": "F:\\Projects\\Wox.Plugin.LastPass\\OnePassword\\OnePassword.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\marku\\.nuget\\packages\\onepassword.net\\2.0.2\\onepassword.net.2.0.2.nupkg.sha512"
+  ],
+  "logs": []
+}
