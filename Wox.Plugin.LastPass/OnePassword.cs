@@ -3,27 +3,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Wox.Plugin.OnePassword.Models;
 using CliWrap;
+using Newtonsoft.Json;
+using System.Windows.Controls.Primitives;
 
-namespace Wox.Plugin.LastPass
+namespace Wox.Plugin.OnePassword
 {
-    public class ExecutionResult
-    {
-        public bool Success { get; set; } = false;
 
-        public string Data { get; set; }
-
-        public string Error { get; set; }
-
-        public CommandResult CmdResult { get; set; }
-    }
-    public class OnePassword
+    public class OnePasswordManager
     {
         public string Path { get; set; } = "op.exe";
 
         public bool IsLoggedIn { get; set; } = false;
 
-        public List<string> Vaults { get; set; } = new List<string>();
+        public List<Vault> Vaults { get; set; } = new List<Vault>();
+
+        public List<OnePasswordItem> Items { get; set; } = new List<OnePasswordItem>();
 
         public async Task<bool> Login(string username)
         {
@@ -37,17 +33,18 @@ namespace Wox.Plugin.LastPass
             return this.IsLoggedIn;
         }
 
-        private async Task<ExecutionResult> ExecuteCliCommand(string cmd, List<string> parameters)
+        private async Task<ExecutionResult> ExecuteCliCommand(string cmd, List<string> cliParams)
         {
-            if (parameters is null)
+            if (cliParams is null)
             {
-                throw new ArgumentNullException(nameof(parameters));
+                throw new ArgumentNullException(nameof(cliParams));
             }
+            cliParams.Add("--format json");
 
             var stdOutBuffer = new StringBuilder();
             var stdErrBuffer = new StringBuilder();
             var result = await Cli.Wrap(this.Path)
-                .WithArguments(new[] { cmd, }.Concat(parameters))
+                .WithArguments(new[] { cmd, }.Concat(cliParams))
                 .WithStandardOutputPipe(PipeTarget.ToStringBuilder(stdOutBuffer))
                 .WithStandardErrorPipe(PipeTarget.ToStringBuilder(stdErrBuffer))
                 .ExecuteAsync();
@@ -61,29 +58,28 @@ namespace Wox.Plugin.LastPass
             if (!string.IsNullOrEmpty(stdErr))
             {
                 returnObj.Error = stdErr;
-            }else
+            } else
             {
                 returnObj.Success = true;
             }
             return returnObj;
         }
 
-        public async Task<List<string>> GetVaults()
+        public async Task<List<Vault>> GetVaults()
         {
-            var vaults = await this.ExecuteCliCommand("list vaults", new List<string>());
-            this.Vaults = vaults.Data.Split('\n').ToList();
+            var cliParams = new List<string>();
+            var vaults = await this.ExecuteCliCommand("vault list", cliParams);
+            this.Vaults = JsonConvert.DeserializeObject<List<Vault>>(vaults.Data);
             return this.Vaults;
-
         }
 
-        private void Result_OutputDataReceived(object sender, System.Diagnostics.DataReceivedEventArgs e)
+        public async Task<List<OnePasswordItem>> GetItems()
         {
-            Console.WriteLine("Received Result", e.Data);
-        }
-
-        private void Result_ErrorDataReceived(object sender, System.Diagnostics.DataReceivedEventArgs e)
-        {
-            Console.WriteLine("Error while processing 1Password CLI", e.Data);
+            var cliParams = new List<string>();
+            cliParams.Add("--long");
+            var onePasswordItems = await this.ExecuteCliCommand("item list", cliParams);
+            this.Items = JsonConvert.DeserializeObject<List<OnePasswordItem>>(onePasswordItems.Data);
+            return this.Items;
         }
     }
 }

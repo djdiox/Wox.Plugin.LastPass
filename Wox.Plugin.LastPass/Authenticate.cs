@@ -9,10 +9,10 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using MaterialSkin;
 using MaterialSkin.Controls;
-using LastPass;
+using Wox.Plugin.OnePassword.Models;
 using System.Threading;
 
-namespace Wox.Plugin.LastPass
+namespace Wox.Plugin.OnePassword
 {
     public partial class Authenticate : MaterialForm
     {
@@ -51,9 +51,12 @@ namespace Wox.Plugin.LastPass
                 var description = "LastPass for Wox";
                 try
                 {
+                    var manager = new OnePasswordManager();
                     var thread = new Thread(
-                       () =>
+                       async () =>
                        {
+                           await manager.Login(usernameTextField.Text);
+
                            vault = Vault.Open(usernameTextField.Text,
                                             passwordTextField.Text,
                                             new ClientInfo(Platform.Desktop, id, description, false),
@@ -99,7 +102,7 @@ namespace Wox.Plugin.LastPass
         }
 
 
-        private class TwoFactorUI : Ui
+        public class TwoFactorUI : Ui
         {
             public override string ProvideSecondFactorPassword(SecondFactorMethod method)
             {

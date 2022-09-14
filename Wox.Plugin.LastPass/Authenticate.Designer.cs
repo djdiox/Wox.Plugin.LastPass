@@ -1,4 +1,4 @@
-﻿namespace Wox.Plugin.LastPass
+﻿namespace Wox.Plugin.OnePassword
 {
     partial class Authenticate
     {

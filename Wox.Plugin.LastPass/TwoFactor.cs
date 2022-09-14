@@ -1,5 +1,4 @@
-﻿using LastPass;
-using MaterialSkin;
+﻿using MaterialSkin;
 using MaterialSkin.Controls;
 using System;
 using System.Collections.Generic;
@@ -11,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Wox.Plugin.LastPass
+namespace Wox.Plugin.OnePassword
 {
     public partial class TwoFactor : MaterialForm
     {

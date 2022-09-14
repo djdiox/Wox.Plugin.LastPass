@@ -4,14 +4,12 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows.Controls;
 using System.Windows.Forms;
-using LastPass;
 using MaterialSkin.Controls;
 using Microsoft.VisualBasic;
-using Wox.Plugin.LastPass;
+using Wox.Plugin.OnePassword;
+using Wox.Plugin.OnePassword.Models;
 
-
-
-namespace Wox.Plugin.LastPass
+namespace Wox.Plugin.OnePassword
 {
     public class Main : IPlugin
     {
@@ -29,7 +27,7 @@ namespace Wox.Plugin.LastPass
                 List<Result> results = new List<Result>();
                 results.Add(new Result()
                 {
-                    Title = "Login to LastPass",
+                    Title = "Login to 1Password",
                     SubTitle = "Press Enter to proceed",
                     IcoPath = "Images\\gray.png",
                     Action = e =>
@@ -43,28 +41,29 @@ namespace Wox.Plugin.LastPass
             else
             {
                 List<Result> results = new List<Result>();
-                for (var i = 0; i < form.vault.Accounts.Length; ++i)
+                for (var i = 0; i < form.vault.Accounts.Count; ++i)
                 {
                     var account = form.vault.Accounts[i];
-                    if (account.Name.Contains(query.Search) || account.Url.Contains(query.Search))
+                    if (account.Title.Contains(query.Search) || account.AdditionalInformation.Contains(query.Search) || account.Urls[0].Href.Contains(query.Search))
                     {
                         results.Add(new Result()
                         {
-                            Title = account.Name + " - [" + account.Username + "]",
-                            SubTitle = account.Url.Replace(query.Search, "[" + query.Search + "]"),
+                            Title = account.Title + " - [" + account.AdditionalInformation + "]",
+                            SubTitle = account.Urls[0].Href.Replace(query.Search, "[" + query.Search + "]"),
                             IcoPath = "Images\\red.png",
                             Action = e =>
                             {
                                 if (e.SpecialKeyState.CtrlPressed)
                                 {
-                                    Clipboard.SetText(account.Username);
+                                    Clipboard.SetText(account.AdditionalInformation);
                                 }
                                 else if (e.SpecialKeyState.ShiftPressed)
                                 {
-                                    Clipboard.SetText(account.Url);
+                                    Clipboard.SetText(account.Urls[0].Href);
                                 } else
                                 {
-                                    Clipboard.SetText(account.Password);
+                                    // TODO Fix me
+                                    Clipboard.SetText(account.AdditionalInformation);
                                 }
                                 return true;
                             }

@@ -1,0 +1,26 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "bf5ba572-89a4-4f87-9d4b-b6ee20d02b92": {
+      "ProjectGuid": "bf5ba572-89a4-4f87-9d4b-b6ee20d02b92",
+      "DisplayName": "Wox.Plugin.1Password",
+      "ColorIndex": 0
+    },
+    "a52c86a3-e29f-416b-ad55-50e0f8ef7831": {
+      "ProjectGuid": "a52c86a3-e29f-416b-ad55-50e0f8ef7831",
+      "DisplayName": "LastPass",
+      "ColorIndex": 1
+    },
+    "ae3ad6d1-ef8b-4f43-8c46-7ac9886e7a31": {
+      "ProjectGuid": "ae3ad6d1-ef8b-4f43-8c46-7ac9886e7a31",
+      "DisplayName": "OnePassword",
+      "ColorIndex": 2
+    },
+    "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3": {
+      "ProjectGuid": "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3",
+      "DisplayName": "Sonstige Dateien",
+      "ColorIndex": -1
+    }
+  },
+  "NextColorIndex": 3
+}

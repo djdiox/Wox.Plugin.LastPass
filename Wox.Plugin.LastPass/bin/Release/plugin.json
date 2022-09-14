@@ -6,7 +6,7 @@
   "Author": "1461748123",
   "Version": "1.0.0",
   "Language": "csharp",
-  "Website": "http://www.getwox.com",
+  "Website": "https://github.com/1461748123/Wox.Plugin.LastPass",
   "IcoPath": "Images\\red.png",
   "ExecuteFileName": "Wox.Plugin.LastPass.dll"
 }
