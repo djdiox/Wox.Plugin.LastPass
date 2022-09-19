@@ -4,13 +4,13 @@ namespace OnePassword
 {
     public class OnePasswordManagerWrapper
     {
-        public OnePasswordManager Manager { get; set; }
+        private OnePasswordManager Manager { get; set; }
 
         public string VaultName { get; set; } = "Private";
 
-        public List<Vault> AvailableVaults = new List<Vault>();
+        private List<Vault> AvailableVaults = new List<Vault>();
 
-        public Vault SelectedVault { get; set; } = null;
+        public Vault? SelectedVault { get; set; }
 
 
         public OnePasswordManagerWrapper(string path = "", string executable = "op.exe", bool verbose = true)

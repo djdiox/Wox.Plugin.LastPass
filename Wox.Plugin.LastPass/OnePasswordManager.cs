@@ -29,10 +29,10 @@ namespace Wox.Plugin.OnePassword
                 parameters.Add("--account " + username);
             }
             var result = await ExecuteCliCommand("signin", parameters);
-            this.IsLoggedIn = result.CmdResult.ExitCode != -1;
-            this.SelectedVault = this.Vaults.Find(e => e.Name == vaultName);
-            this.Items = await this.GetItems();
-            this.SelectedVault.Accounts = Items.Where(e => e.Vault.Name == vaultName).ToList();
+            IsLoggedIn = result.CmdResult.ExitCode != -1;
+            SelectedVault = this.Vaults.Find(e => e.Name == vaultName);
+            Items = await this.GetItems();
+            SelectedVault.Accounts = Items.Where(e => e.Vault.Name == vaultName).ToList();
             return this.SelectedVault;
         }
 
@@ -85,14 +85,13 @@ namespace Wox.Plugin.OnePassword
                 cliParams.Add("--share-link");
             }
             var onePasswordItems = await ExecuteCliCommand("item get " + itemId, cliParams);
-            OnePasswordItem onePasswordItem = JsonConvert.DeserializeObject<OnePasswordItem>(onePasswordItems.Data);
+            var onePasswordItem = JsonConvert.DeserializeObject<OnePasswordItem>(onePasswordItems.Data);
             return onePasswordItem;
         }
 
         public async Task<List<OnePasswordItem>> GetItems()
         {
-            var cliParams = new List<string>();
-            cliParams.Add("--long");
+            var cliParams = new List<string> {"--long"};
             var onePasswordItems = await this.ExecuteCliCommand("item list", cliParams);
             Items = JsonConvert.DeserializeObject<List<OnePasswordItem>>(onePasswordItems.Data);
             return Items;
