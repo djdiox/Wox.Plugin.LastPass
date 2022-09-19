@@ -1,12 +1,11 @@
-﻿using System;
+﻿using CliWrap;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Wox.Plugin.OnePassword.Models;
-using CliWrap;
-using Newtonsoft.Json;
-using System.Windows.Controls.Primitives;
 
 namespace Wox.Plugin.OnePassword
 {
@@ -19,18 +18,22 @@ namespace Wox.Plugin.OnePassword
 
         public List<Vault> Vaults { get; set; } = new List<Vault>();
 
+        public Vault SelectedVault { get; set; } = new Vault();
         public List<OnePasswordItem> Items { get; set; } = new List<OnePasswordItem>();
 
-        public async Task<bool> Login(string username)
+        public async Task<Vault> Login(string username, string vaultName = "Private")
         {
             List<string> parameters = new List<string>();
             if (string.IsNullOrEmpty(username) == false)
             {
                 parameters.Add("--account " + username);
             }
-            var result = await this.ExecuteCliCommand("signin", parameters);
+            var result = await ExecuteCliCommand("signin", parameters);
             this.IsLoggedIn = result.CmdResult.ExitCode != -1;
-            return this.IsLoggedIn;
+            this.SelectedVault = this.Vaults.Find(e => e.Name == vaultName);
+            this.Items = await this.GetItems();
+            this.SelectedVault.Accounts = Items.Where(e => e.Vault.Name == vaultName).ToList();
+            return this.SelectedVault;
         }
 
         private async Task<ExecutionResult> ExecuteCliCommand(string cmd, List<string> cliParams)
@@ -40,10 +43,11 @@ namespace Wox.Plugin.OnePassword
                 throw new ArgumentNullException(nameof(cliParams));
             }
             cliParams.Add("--format json");
+            cliParams.Add("--no-color");
 
             var stdOutBuffer = new StringBuilder();
             var stdErrBuffer = new StringBuilder();
-            var result = await Cli.Wrap(this.Path)
+            var result = await Cli.Wrap(Path)
                 .WithArguments(new[] { cmd, }.Concat(cliParams))
                 .WithStandardOutputPipe(PipeTarget.ToStringBuilder(stdOutBuffer))
                 .WithStandardErrorPipe(PipeTarget.ToStringBuilder(stdErrBuffer))
@@ -68,9 +72,21 @@ namespace Wox.Plugin.OnePassword
         public async Task<List<Vault>> GetVaults()
         {
             var cliParams = new List<string>();
-            var vaults = await this.ExecuteCliCommand("vault list", cliParams);
-            this.Vaults = JsonConvert.DeserializeObject<List<Vault>>(vaults.Data);
-            return this.Vaults;
+            var vaults = await ExecuteCliCommand("vault list", cliParams);
+            Vaults = JsonConvert.DeserializeObject<List<Vault>>(vaults.Data);
+            return Vaults;
+        }
+
+        public async Task<OnePasswordItem> GetItem(string itemId, bool shareLink)
+        {
+            var cliParams = new List<string>();
+            if(shareLink)
+            {
+                cliParams.Add("--share-link");
+            }
+            var onePasswordItems = await ExecuteCliCommand("item get " + itemId, cliParams);
+            OnePasswordItem onePasswordItem = JsonConvert.DeserializeObject<OnePasswordItem>(onePasswordItems.Data);
+            return onePasswordItem;
         }
 
         public async Task<List<OnePasswordItem>> GetItems()
@@ -78,8 +94,8 @@ namespace Wox.Plugin.OnePassword
             var cliParams = new List<string>();
             cliParams.Add("--long");
             var onePasswordItems = await this.ExecuteCliCommand("item list", cliParams);
-            this.Items = JsonConvert.DeserializeObject<List<OnePasswordItem>>(onePasswordItems.Data);
-            return this.Items;
+            Items = JsonConvert.DeserializeObject<List<OnePasswordItem>>(onePasswordItems.Data);
+            return Items;
         }
     }
 }

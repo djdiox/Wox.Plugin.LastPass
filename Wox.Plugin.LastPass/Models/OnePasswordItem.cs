@@ -6,7 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Wox.Plugin.OnePassword.Models
-{// Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
+{
+    // OnePasswordItem myDeserializedClass = JsonConvert.DeserializeObject<OnePasswordItem>(data);
     public class OnePasswordItem
     {
         [JsonProperty("id")]
@@ -41,36 +42,17 @@ namespace Wox.Plugin.OnePassword.Models
 
         [JsonProperty("urls")]
         public List<Url> Urls;
-    }
 
-    public class Url
-    {
-        [JsonProperty("label")]
-        public string Label;
+        [JsonProperty("fields")]
+        public List<Field> Fields = new List<Field>();
+        [JsonProperty("sections")]
+        public List<Section> Sections { get; set; }
 
-        [JsonProperty("primary")]
-        public bool Primary;
-
-        [JsonProperty("href")]
-        public string Href;
-    }
-
-    public class Vault
-    {
-        [JsonProperty("id")]
-        public string Id;
-
-        [JsonProperty("name")]
-        public string Name;
-
-        [JsonProperty("content_version")]
-        public string ContentVersion;
-
-        public List<OnePasswordItem> Accounts { get; internal set; } = new List<OnePasswordItem>();
-
-        internal static Vault Open(string text1, string text2, ClientInfo clientInfo, Authenticate.TwoFactorUI twoFactorUI)
+        public string GetPassword()
         {
-            throw new NotImplementedException();
+            Field res = Fields.Find(e => e.Label == "password");
+            var val = res != null ? res.Value : "";
+            return val;
         }
     }
 }

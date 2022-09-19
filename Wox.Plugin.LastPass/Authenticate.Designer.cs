@@ -36,6 +36,10 @@
             this.loginButton = new MaterialSkin.Controls.MaterialFlatButton();
             this.rememberUsernameCheckBox = new MaterialSkin.Controls.MaterialCheckBox();
             this.rememberPasswordCheckBox = new MaterialSkin.Controls.MaterialCheckBox();
+            this.selectedVaultRememberCheckBox = new MaterialSkin.Controls.MaterialCheckBox();
+            this.selectedVaultTextbox = new MaterialSkin.Controls.MaterialSingleLineTextField();
+            this.materialLabel1 = new MaterialSkin.Controls.MaterialLabel();
+            this.autoLoginCheckbox = new MaterialSkin.Controls.MaterialCheckBox();
             this.SuspendLayout();
             // 
             // usernameLabel
@@ -67,6 +71,7 @@
             // usernameTextField
             // 
             this.usernameTextField.Depth = 0;
+            this.usernameTextField.Enabled = false;
             this.usernameTextField.Hint = "";
             this.usernameTextField.Location = new System.Drawing.Point(95, 98);
             this.usernameTextField.MaxLength = 32767;
@@ -84,6 +89,7 @@
             // passwordTextField
             // 
             this.passwordTextField.Depth = 0;
+            this.passwordTextField.Enabled = false;
             this.passwordTextField.Hint = "";
             this.passwordTextField.Location = new System.Drawing.Point(95, 146);
             this.passwordTextField.MaxLength = 32767;
@@ -104,7 +110,7 @@
             this.loginButton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.loginButton.Depth = 0;
             this.loginButton.Icon = null;
-            this.loginButton.Location = new System.Drawing.Point(432, 113);
+            this.loginButton.Location = new System.Drawing.Point(344, 251);
             this.loginButton.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.loginButton.MouseState = MaterialSkin.MouseState.HOVER;
             this.loginButton.Name = "loginButton";
@@ -119,6 +125,7 @@
             // 
             this.rememberUsernameCheckBox.AutoSize = true;
             this.rememberUsernameCheckBox.Depth = 0;
+            this.rememberUsernameCheckBox.Enabled = false;
             this.rememberUsernameCheckBox.Font = new System.Drawing.Font("Roboto", 10F);
             this.rememberUsernameCheckBox.Location = new System.Drawing.Point(308, 91);
             this.rememberUsernameCheckBox.Margin = new System.Windows.Forms.Padding(0);
@@ -135,6 +142,7 @@
             // 
             this.rememberPasswordCheckBox.AutoSize = true;
             this.rememberPasswordCheckBox.Depth = 0;
+            this.rememberPasswordCheckBox.Enabled = false;
             this.rememberPasswordCheckBox.Font = new System.Drawing.Font("Roboto", 10F);
             this.rememberPasswordCheckBox.Location = new System.Drawing.Point(308, 139);
             this.rememberPasswordCheckBox.Margin = new System.Windows.Forms.Padding(0);
@@ -147,11 +155,81 @@
             this.rememberPasswordCheckBox.Text = "Remember";
             this.rememberPasswordCheckBox.UseVisualStyleBackColor = true;
             // 
+            // selectedVaultRememberCheckBox
+            // 
+            this.selectedVaultRememberCheckBox.AutoSize = true;
+            this.selectedVaultRememberCheckBox.Depth = 0;
+            this.selectedVaultRememberCheckBox.Font = new System.Drawing.Font("Roboto", 10F);
+            this.selectedVaultRememberCheckBox.Location = new System.Drawing.Point(308, 186);
+            this.selectedVaultRememberCheckBox.Margin = new System.Windows.Forms.Padding(0);
+            this.selectedVaultRememberCheckBox.MouseLocation = new System.Drawing.Point(-1, -1);
+            this.selectedVaultRememberCheckBox.MouseState = MaterialSkin.MouseState.HOVER;
+            this.selectedVaultRememberCheckBox.Name = "selectedVaultRememberCheckBox";
+            this.selectedVaultRememberCheckBox.Ripple = true;
+            this.selectedVaultRememberCheckBox.Size = new System.Drawing.Size(97, 30);
+            this.selectedVaultRememberCheckBox.TabIndex = 9;
+            this.selectedVaultRememberCheckBox.Text = "Remember";
+            this.selectedVaultRememberCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // selectedVaultTextbox
+            // 
+            this.selectedVaultTextbox.Depth = 0;
+            this.selectedVaultTextbox.Hint = "";
+            this.selectedVaultTextbox.Location = new System.Drawing.Point(95, 193);
+            this.selectedVaultTextbox.MaxLength = 32767;
+            this.selectedVaultTextbox.MouseState = MaterialSkin.MouseState.HOVER;
+            this.selectedVaultTextbox.Name = "selectedVaultTextbox";
+            this.selectedVaultTextbox.PasswordChar = '\0';
+            this.selectedVaultTextbox.SelectedText = "";
+            this.selectedVaultTextbox.SelectionLength = 0;
+            this.selectedVaultTextbox.SelectionStart = 0;
+            this.selectedVaultTextbox.Size = new System.Drawing.Size(210, 23);
+            this.selectedVaultTextbox.TabIndex = 8;
+            this.selectedVaultTextbox.TabStop = false;
+            this.selectedVaultTextbox.Text = "Private";
+            this.selectedVaultTextbox.UseSystemPasswordChar = false;
+            // 
+            // materialLabel1
+            // 
+            this.materialLabel1.AutoSize = true;
+            this.materialLabel1.Depth = 0;
+            this.materialLabel1.Font = new System.Drawing.Font("Roboto", 11F);
+            this.materialLabel1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.materialLabel1.Location = new System.Drawing.Point(14, 197);
+            this.materialLabel1.MouseState = MaterialSkin.MouseState.HOVER;
+            this.materialLabel1.Name = "materialLabel1";
+            this.materialLabel1.Size = new System.Drawing.Size(44, 19);
+            this.materialLabel1.TabIndex = 7;
+            this.materialLabel1.Text = "Vault";
+            // 
+            // autoLoginCheckbox
+            // 
+            this.autoLoginCheckbox.AutoSize = true;
+            this.autoLoginCheckbox.Checked = true;
+            this.autoLoginCheckbox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.autoLoginCheckbox.Depth = 0;
+            this.autoLoginCheckbox.Font = new System.Drawing.Font("Roboto", 10F);
+            this.autoLoginCheckbox.Location = new System.Drawing.Point(16, 255);
+            this.autoLoginCheckbox.Margin = new System.Windows.Forms.Padding(0);
+            this.autoLoginCheckbox.MouseLocation = new System.Drawing.Point(-1, -1);
+            this.autoLoginCheckbox.MouseState = MaterialSkin.MouseState.HOVER;
+            this.autoLoginCheckbox.Name = "autoLoginCheckbox";
+            this.autoLoginCheckbox.Ripple = true;
+            this.autoLoginCheckbox.Size = new System.Drawing.Size(218, 30);
+            this.autoLoginCheckbox.TabIndex = 10;
+            this.autoLoginCheckbox.Text = "Auto Login via 1Password App";
+            this.autoLoginCheckbox.UseVisualStyleBackColor = true;
+            this.autoLoginCheckbox.CheckedChanged += new System.EventHandler(this.materialCheckBox1_CheckedChanged);
+            // 
             // Authenticate
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(511, 193);
+            this.ClientSize = new System.Drawing.Size(434, 294);
+            this.Controls.Add(this.autoLoginCheckbox);
+            this.Controls.Add(this.selectedVaultRememberCheckBox);
+            this.Controls.Add(this.selectedVaultTextbox);
+            this.Controls.Add(this.materialLabel1);
             this.Controls.Add(this.rememberPasswordCheckBox);
             this.Controls.Add(this.rememberUsernameCheckBox);
             this.Controls.Add(this.loginButton);
@@ -180,5 +258,9 @@
         private MaterialSkin.Controls.MaterialFlatButton loginButton;
         private MaterialSkin.Controls.MaterialCheckBox rememberUsernameCheckBox;
         private MaterialSkin.Controls.MaterialCheckBox rememberPasswordCheckBox;
+        private MaterialSkin.Controls.MaterialCheckBox selectedVaultRememberCheckBox;
+        private MaterialSkin.Controls.MaterialSingleLineTextField selectedVaultTextbox;
+        private MaterialSkin.Controls.MaterialLabel materialLabel1;
+        private MaterialSkin.Controls.MaterialCheckBox autoLoginCheckbox;
     }
 }

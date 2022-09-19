@@ -25,12 +25,12 @@ namespace Wox.Plugin.OnePassword
             passwordTextField.Text = Properties.Settings.Default.password;
             rememberUsernameCheckBox.Checked = Properties.Settings.Default.saveusername;
             rememberPasswordCheckBox.Checked = Properties.Settings.Default.savepassword;
+            selectedVaultRememberCheckBox.Checked = Properties.Settings.Default.savevault;
         }
 
         public Authenticate()
         {
             InitializeComponent();
-
             MaterialSkinManager materialSkinManager = MaterialSkinManager.Instance;
             materialSkinManager.AddFormToManage(this);
             materialSkinManager.Theme = MaterialSkinManager.Themes.LIGHT;
@@ -41,26 +41,26 @@ namespace Wox.Plugin.OnePassword
                 Primary.Blue500, Accent.LightBlue200,
                 TextShade.WHITE
             );
+            setEnabled(true);
         }
 
         private void loginButton_Click(object sender, EventArgs e)
         {
-            if (usernameTextField.Text != "" && passwordTextField.Text != "")
+            if (usernameTextField.Text != "")
             {
-                var id = "060b5cde8c3d11e89eb6529269fb1459";
-                var description = "LastPass for Wox";
                 try
                 {
                     var manager = new OnePasswordManager();
                     var thread = new Thread(
                        async () =>
                        {
-                           await manager.Login(usernameTextField.Text);
-
-                           vault = Vault.Open(usernameTextField.Text,
-                                            passwordTextField.Text,
-                                            new ClientInfo(Platform.Desktop, id, description, false),
-                                            new TwoFactorUI());
+                           await manager.Login(usernameTextField.Text, selectedVaultTextbox.Text);
+                           //await manager.GetVaults();
+                           manager.Vaults.ForEach(vault =>
+                           {
+                               vault.Accounts = manager.Items.Where<OnePasswordItem>(item => item.Vault.Id == vault.Id).ToList();
+                           });
+                           vault = manager.Vaults.Find((res) => res.Name == selectedVaultTextbox.Text);
                        });
 
                     thread.Start();
@@ -76,6 +76,11 @@ namespace Wox.Plugin.OnePassword
                     else
                         Properties.Settings.Default.password = "";
 
+                    if(selectedVaultRememberCheckBox.Checked)
+                    {
+                        Properties.Settings.Default.vault = selectedVaultTextbox.Text;
+                    }
+                    Properties.Settings.Default.savevault = selectedVaultRememberCheckBox.Checked;
                     Properties.Settings.Default.saveusername = rememberUsernameCheckBox.Checked;
                     Properties.Settings.Default.savepassword = rememberPasswordCheckBox.Checked;
                     Properties.Settings.Default.Save();
@@ -91,7 +96,7 @@ namespace Wox.Plugin.OnePassword
                 catch (Exception ex)
                 {
                     vault = null;
-                    MessageBox.Show("Something went wrong, maybe wrong username or password?", "Error", MessageBoxButtons.OK);
+                    MessageBox.Show("Something went wrong, maybe wrong username or password?\nDescription: " + ex.Message, "Error", MessageBoxButtons.OK);
                 }
 
             }
@@ -139,6 +144,34 @@ namespace Wox.Plugin.OnePassword
                     });
                 thread.Start();
             }
+        }
+
+        private void setEnabled(bool enabled)
+        {
+            if(!enabled)
+            {
+                usernameTextField.Enabled = true;
+                passwordTextField.Enabled = true;
+                rememberUsernameCheckBox.Enabled = true;
+                rememberPasswordCheckBox.Enabled = true;
+            }
+            else
+            {
+                usernameTextField.Text = "";
+                usernameTextField.Enabled = false;
+                passwordTextField.Text = "";
+                passwordTextField.Enabled = false;
+                rememberUsernameCheckBox.Checked = false;
+                rememberUsernameCheckBox.Enabled = false;
+                rememberPasswordCheckBox.Enabled = false;
+                rememberPasswordCheckBox.Checked = false;
+            }
+        }
+
+        private void materialCheckBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            var result = ((CheckBox)sender).Checked;
+            setEnabled(result);
         }
     }
 }
