@@ -46,64 +46,64 @@ namespace Wox.Plugin.OnePassword
 
         private void loginButton_Click(object sender, EventArgs e)
         {
-            if (usernameTextField.Text != "")
+            try
             {
-                try
-                {
-                    var manager = new OnePasswordManager();
-                    var thread = new Thread(
-                       async () =>
-                       {
-                           await manager.Login(usernameTextField.Text, selectedVaultTextbox.Text);
+                var manager = new OnePasswordManager();
+                var thread = new Thread(
+                   async () =>
+                   {
+                       await manager.Login(usernameTextField.Text, selectedVaultTextbox.Text);
                            //await manager.GetVaults();
                            manager.Vaults.ForEach(vault =>
-                           {
-                               vault.Accounts = manager.Items.Where<OnePasswordItem>(item => item.Vault.Id == vault.Id).ToList();
-                           });
-                           vault = manager.Vaults.Find((res) => res.Name == selectedVaultTextbox.Text);
+                       {
+                           vault.Accounts = manager.Items.Where(item => item.Vault.Id == vault.Id).ToList();
                        });
+                       vault = manager.Vaults.Find((res) => res.Name == selectedVaultTextbox.Text);
+                   });
 
-                    thread.Start();
-                    thread.Join();
+                thread.Start();
+                thread.Join();
 
-                    if (rememberUsernameCheckBox.Checked)
-                        Properties.Settings.Default.username = usernameTextField.Text;
-                    else
-                        Properties.Settings.Default.username = "";
+                if (rememberUsernameCheckBox.Checked)
+                    Properties.Settings.Default.username = usernameTextField.Text;
+                else
+                    Properties.Settings.Default.username = "";
 
-                    if (rememberPasswordCheckBox.Checked)
-                        Properties.Settings.Default.password = passwordTextField.Text;
-                    else
-                        Properties.Settings.Default.password = "";
+                if (rememberPasswordCheckBox.Checked)
+                    Properties.Settings.Default.password = passwordTextField.Text;
+                else
+                    Properties.Settings.Default.password = "";
 
-                    if(selectedVaultRememberCheckBox.Checked)
-                    {
-                        Properties.Settings.Default.vault = selectedVaultTextbox.Text;
-                    }
-                    Properties.Settings.Default.savevault = selectedVaultRememberCheckBox.Checked;
-                    Properties.Settings.Default.saveusername = rememberUsernameCheckBox.Checked;
-                    Properties.Settings.Default.savepassword = rememberPasswordCheckBox.Checked;
-                    Properties.Settings.Default.Save();
-
-                    
-                    Main.form.twofactor.Close();
-                    Main.form.twofactor.Dispose();
-
-                    Main.form.Close();
-                    Main.form.Dispose();
-                    MessageBox.Show("You have successfully logged in.");
-                }
-                catch (Exception ex)
+                if (selectedVaultRememberCheckBox.Checked)
                 {
-                    vault = null;
-                    MessageBox.Show("Something went wrong, maybe wrong username or password?\nDescription: " + ex.Message, "Error", MessageBoxButtons.OK);
+                    Properties.Settings.Default.vault = selectedVaultTextbox.Text;
                 }
+                Properties.Settings.Default.savevault = selectedVaultRememberCheckBox.Checked;
+                Properties.Settings.Default.saveusername = rememberUsernameCheckBox.Checked;
+                Properties.Settings.Default.savepassword = rememberPasswordCheckBox.Checked;
+                Properties.Settings.Default.Save();
 
+
+                Main.form.twofactor.Close();
+                Main.form.twofactor.Dispose();
+
+                Main.form.Close();
+                Main.form.Dispose();
+                MessageBox.Show("You have successfully logged in.");
             }
-            else
+            catch (Exception ex)
             {
-                MessageBox.Show("You are missing some information!", "You are missing some information!", MessageBoxButtons.OK);
+                vault = null;
+                MessageBox.Show("Something went wrong, maybe wrong username or password?\nDescription: " + ex.Message, "Error", MessageBoxButtons.OK);
             }
+            //if (autoLoginCheckbox.Checked)
+            //{
+                
+            //}
+            //else
+            //{
+            //    MessageBox.Show("You are missing some information!", "You are missing some information!", MessageBoxButtons.OK);
+            //}
         }
 
 
